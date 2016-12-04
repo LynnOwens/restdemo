@@ -1,25 +1,34 @@
 package net.tofweb.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(name = "widget", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" }) })
 public class Widget {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, unique = true, length = 11)
 	private Integer id;
+
+	@Column(name = "size", nullable = false, unique = false, length = 11)
 	private Integer size;
+
+	@Column(name = "description", length = 20, nullable = true)
 	private String description;
 
 	public Widget() {
 		super();
 	}
 
-	public Widget(Integer id, Integer size, String description) {
+	public Widget(Integer size, String description) {
 		super();
-		this.id = id;
 		this.size = size;
 		this.description = description;
 	}
