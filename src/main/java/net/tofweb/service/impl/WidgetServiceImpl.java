@@ -19,4 +19,8 @@ public class WidgetServiceImpl implements WidgetService {
 	public Widget save(Widget widget) {
 		return widgetDao.save(widget);
 	}
+
+	public Widget findById(Integer widgetId) {
+		return widgetDao.findById(widgetId);
+	}
 }

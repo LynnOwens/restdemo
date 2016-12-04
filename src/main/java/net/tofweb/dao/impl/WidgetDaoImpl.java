@@ -23,4 +23,9 @@ public class WidgetDaoImpl implements WidgetDao {
 
 		return widget;
 	}
+
+	public Widget findById(Integer widgetId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		return (Widget) currentSession.get(Widget.class, widgetId);
+	}
 }

@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.annotation.Resource;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +21,11 @@ public class WidgetController {
 
 	@Resource
 	WidgetService widgetService;
+
+	@RequestMapping(method = RequestMethod.GET, value = "/{widgetId}")
+	Widget readBookmark(@PathVariable Integer widgetId) {
+		return this.widgetService.findById(widgetId);
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	ResponseEntity<?> add(@RequestBody Widget widget) {
