@@ -21,20 +21,20 @@ import net.tofweb.service.WidgetService;
 public class WidgetController {
 
 	@Resource
-	WidgetService widgetService;
+	private WidgetService widgetService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	Collection<Widget> get() {
+	public Collection<Widget> get() {
 		return widgetService.findAll();
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{widgetId}")
-	Widget getById(@PathVariable Integer widgetId) {
+	public Widget getById(@PathVariable Integer widgetId) {
 		return widgetService.findById(widgetId);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	ResponseEntity<?> add(@RequestBody Widget widget) {
+	public ResponseEntity<?> add(@RequestBody Widget widget) {
 		Widget result = widgetService.save(widget);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId())
 				.toUri();
@@ -43,7 +43,12 @@ public class WidgetController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
-	Widget update(@RequestBody Widget widget) {
+	public Widget update(@RequestBody Widget widget) {
 		return widgetService.save(widget);
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{widgetId}")
+	public void delete(@PathVariable Integer widgetId) {
+		widgetService.delete(widgetId);
 	}
 }

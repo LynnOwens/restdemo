@@ -38,4 +38,9 @@ public class WidgetDaoImpl extends AbstractDao implements WidgetDao {
 		Session currentSession = sessionFactory.getCurrentSession();
 		return (List<Widget>) currentSession.createQuery("from Widget").getResultList();
 	}
+
+	public void delete(Widget widget) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		currentSession.delete(widget);
+	}
 }

@@ -11,8 +11,6 @@ public interface WidgetDao {
 
 	Collection<Widget> findAll();
 
-	// void update(Widget widget);
-	//
-	// void delete(Widget widget);
+	void delete(Widget widget);
 
 }

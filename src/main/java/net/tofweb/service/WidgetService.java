@@ -11,4 +11,6 @@ public interface WidgetService {
 	Widget findById(Integer widgetId);
 
 	Collection<Widget> findAll();
+
+	void delete(Integer widgetId);
 }

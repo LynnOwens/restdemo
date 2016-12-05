@@ -29,4 +29,10 @@ public class WidgetServiceImpl implements WidgetService {
 	public Collection<Widget> findAll() {
 		return widgetDao.findAll();
 	}
+
+	public void delete(Integer widgetId) {
+		Widget widget = new Widget();
+		widget.setId(widgetId);
+		widgetDao.delete(widget);
+	}
 }
