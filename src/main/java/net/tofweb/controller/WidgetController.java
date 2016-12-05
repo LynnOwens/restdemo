@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import net.tofweb.exception.ResourceNotFoundException;
 import net.tofweb.model.Widget;
 import net.tofweb.service.WidgetService;
 
@@ -30,7 +31,13 @@ public class WidgetController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{widgetId}")
 	public Widget getById(@PathVariable Integer widgetId) {
-		return widgetService.findById(widgetId);
+		Widget widget = widgetService.findById(widgetId);
+
+		if (widget == null) {
+			throw new ResourceNotFoundException();
+		}
+
+		return widget;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
