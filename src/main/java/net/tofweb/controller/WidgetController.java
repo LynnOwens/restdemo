@@ -1,13 +1,16 @@
 package net.tofweb.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import net.tofweb.exception.ResourceNotFoundException;
 import net.tofweb.model.Widget;
+import net.tofweb.resource.WidgetResource;
 import net.tofweb.service.WidgetService;
 
 @RestController
@@ -36,10 +39,18 @@ public class WidgetController {
 	 * @return Collection<Widget>
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public Collection<Widget> get() {
-		Collection<Widget> widgets = new ArrayList<Widget>();
-		widgets = widgetService.findAll();
-		return widgets;
+	public Resources<WidgetResource> get() {
+		Collection<Widget> widgets = widgetService.findAll();
+
+		// Stream the collection of widgets through two maps
+		// The first map casts the object to a Widget - needed because steams
+		// work on Objects
+		// The second map builds a WidgetResource with the specified Widget
+		// Finally the steam is turned back into a list for output
+		List<WidgetResource> widgetResourceList = widgets.stream().map(Widget.class::cast).map(WidgetResource::new)
+				.collect(Collectors.toList());
+
+		return new Resources<WidgetResource>(widgetResourceList);
 	}
 
 	/**
@@ -51,14 +62,14 @@ public class WidgetController {
 	 * @return Widget
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{widgetId}")
-	public Widget getById(@PathVariable Integer widgetId) {
+	public WidgetResource getById(@PathVariable Integer widgetId) {
 		Widget widget = widgetService.findById(widgetId);
 
 		if (widget == null) {
 			throw new ResourceNotFoundException();
 		}
 
-		return widget;
+		return new WidgetResource(widget);
 	}
 
 	/**
@@ -70,10 +81,9 @@ public class WidgetController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> add(@RequestBody Widget widget) {
 		Widget result = widgetService.save(widget);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId())
-				.toUri();
+		Link widgetLink = new WidgetResource(result).getLink("self");
 
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.created(URI.create(widgetLink.getHref())).build();
 	}
 
 	/**
