@@ -41,4 +41,9 @@ public class WidgetController {
 
 		return ResponseEntity.created(location).build();
 	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+	Widget update(@RequestBody Widget widget) {
+		return widgetService.save(widget);
+	}
 }
