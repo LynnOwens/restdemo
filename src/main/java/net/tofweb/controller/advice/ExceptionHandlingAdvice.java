@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import net.tofweb.exception.InvalidCustomerException;
 import net.tofweb.exception.ResourceNotFoundException;
 
 /**
@@ -33,9 +34,22 @@ public class ExceptionHandlingAdvice extends ResponseEntityExceptionHandler {
 	 * @return Http Status 404
 	 */
 	@ExceptionHandler(ResourceNotFoundException.class)
-	protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
-		String message = "Widget not found";
+	protected ResponseEntity<Object> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
+		String message = "Customer not found";
 		return handleExceptionInternal(ex, message, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+
+	/**
+	 * In the event that a user-submitted Customer fails validations, respond
+	 * with a 400
+	 * 
+	 * @param ex
+	 * @param request
+	 * @return
+	 */
+	@ExceptionHandler(InvalidCustomerException.class)
+	protected ResponseEntity<Object> handleInvalidCustomer(InvalidCustomerException ex, WebRequest request) {
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	/**

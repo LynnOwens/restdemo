@@ -10,17 +10,17 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.tofweb.dao.WidgetDao;
-import net.tofweb.model.Widget;
+import net.tofweb.dao.CustomerDao;
+import net.tofweb.model.Customer;
 
 /**
  * @author Lynn Owens
  *
- *         Widget data access.
+ *         Customer data access.
  */
 @Repository
 @Transactional
-public class WidgetDaoImpl implements WidgetDao {
+public class CustomerDaoImpl implements CustomerDao {
 
 	@Resource
 	private SessionFactory sessionFactory;
@@ -28,43 +28,43 @@ public class WidgetDaoImpl implements WidgetDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.tofweb.dao.WidgetDao#save(net.tofweb.model.Widget)
+	 * @see net.tofweb.dao.CustomerDao#save(net.tofweb.model.Customer)
 	 */
-	public Widget save(Widget widget) {
+	public Customer save(Customer customer) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.saveOrUpdate(widget);
+		currentSession.saveOrUpdate(customer);
 
-		return widget;
+		return customer;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.tofweb.dao.WidgetDao#findById(java.lang.Integer)
+	 * @see net.tofweb.dao.CustomerDao#findById(java.lang.Integer)
 	 */
-	public Widget findById(Integer widgetId) {
+	public Customer findById(Integer customerId) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		return (Widget) currentSession.get(Widget.class, widgetId);
+		return (Customer) currentSession.get(Customer.class, customerId);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.tofweb.dao.WidgetDao#findAll()
+	 * @see net.tofweb.dao.CustomerDao#findAll()
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Widget> findAll() {
+	public Collection<Customer> findAll() {
 		Session currentSession = sessionFactory.getCurrentSession();
-		return (List<Widget>) currentSession.createQuery("from Widget").getResultList();
+		return (List<Customer>) currentSession.createQuery("from Customer").getResultList();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.tofweb.dao.WidgetDao#delete(net.tofweb.model.Widget)
+	 * @see net.tofweb.dao.CustomerDao#delete(net.tofweb.model.Customer)
 	 */
-	public void delete(Widget widget) {
+	public void delete(Customer customer) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.delete(widget);
+		currentSession.delete(customer);
 	}
 }
