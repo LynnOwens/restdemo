@@ -1,5 +1,7 @@
 package net.tofweb.service.impl;
 
+import java.util.Collection;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -22,5 +24,9 @@ public class WidgetServiceImpl implements WidgetService {
 
 	public Widget findById(Integer widgetId) {
 		return widgetDao.findById(widgetId);
+	}
+
+	public Collection<Widget> findAll() {
+		return widgetDao.findAll();
 	}
 }

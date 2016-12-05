@@ -1,6 +1,7 @@
 package net.tofweb.controller;
 
 import java.net.URI;
+import java.util.Collection;
 
 import javax.annotation.Resource;
 
@@ -22,9 +23,14 @@ public class WidgetController {
 	@Resource
 	WidgetService widgetService;
 
+	@RequestMapping(method = RequestMethod.GET)
+	Collection<Widget> get() {
+		return widgetService.findAll();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/{widgetId}")
-	Widget readBookmark(@PathVariable Integer widgetId) {
-		return this.widgetService.findById(widgetId);
+	Widget getById(@PathVariable Integer widgetId) {
+		return widgetService.findById(widgetId);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
