@@ -8,6 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+/**
+ * @author Lynn Owens
+ *
+ *         A Widget. This class is just to demonstrate a persistable bean.
+ */
 @Entity
 @Table(name = "widget", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" }) })
 public class Widget {

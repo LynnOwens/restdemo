@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -19,30 +18,53 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * @author Lynn Owens
+ *
+ *         Setup the persistence framework
+ */
+// This class contains configuration info
 @Configuration
+// Permit the use of transactions for db connections
 @EnableTransactionManagement
-@ComponentScan(basePackages = "net.tofweb")
 public class PersistenceConfig {
+
 	@Resource
 	private Environment env;
 
+	/**
+	 * Get a SessionFactory with which to build sessions to database
+	 * 
+	 * @return LocalSessionFactoryBean
+	 */
 	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
+	public LocalSessionFactoryBean getSessionFactory() {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		sessionFactory.setDataSource(restDataSource());
+		sessionFactory.setDataSource(getDataSource());
 		sessionFactory.setPackagesToScan(new String[] { "net.tofweb" });
-		sessionFactory.setHibernateProperties(hibernateProperties());
+		sessionFactory.setHibernateProperties(buildHibernateProperties());
 
 		return sessionFactory;
 	}
 
+	/**
+	 * Get a DataSource to the embedded H2 database
+	 * 
+	 * @return EmbeddedDatabase
+	 */
 	@Bean
-	public DataSource restDataSource() {
+	public DataSource getDataSource() {
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
 		EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2).addScript("db/sql/initDb.sql").build();
 		return db;
 	}
 
+	/**
+	 * Get a TransactionManager using the specified SessionFactory
+	 * 
+	 * @param sessionFactory
+	 * @return HibernateTransactionManager
+	 */
 	@Bean
 	@Autowired
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
@@ -52,18 +74,28 @@ public class PersistenceConfig {
 		return txManager;
 	}
 
+	/**
+	 * Get a translator to convert database driver exceptions into a common
+	 * standard
+	 * 
+	 * @return PersistenceExceptionTranslationPostProcessor
+	 */
 	@Bean
 	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 
-	Properties hibernateProperties() {
+	/*
+	 * Build the Hibernate Properties. This configures Hibernate to talk to the
+	 * H2 database.
+	 */
+	private Properties buildHibernateProperties() {
 		return new Properties() {
 
 			private static final long serialVersionUID = 1L;
 
 			{
-				setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+				setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
 			}
 		};
 	}
